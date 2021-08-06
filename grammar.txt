@@ -1,0 +1,50 @@
+expr : KEYWORD:VARIABLE IDENTIFIER EQUALS expr
+	 :comp-expr((KEYWORD:ADDITIONALLY|KEYWORD:ALTERNATIVELY) comp-expr)*
+
+comp-expr	 :NOT comp-expr
+			 : math-expr ((DOUBLEEQUALS|LESSTHAN|GREATERTHAN|LESSTHANEQUALS|GREATERTHANEQUALS) math-expr)*
+	 
+math-expr	 : term((PLUS|MINUS) term)*
+
+term 		: factor((MULTIPLY|DIVIDE) factor)*
+
+factor :  (PLUS|MINUS) factor
+	   : power
+
+exponent : call(POWER factor)*
+
+call	:  fragment(LPARENT (expr (COMMA expr)*)? RPARENT)?
+
+fragment : INT|FLOAT|STRING|IDENTIFIER
+	 	 : LPARENT expr RPARENT
+	 	 : list-expr
+	 	 : if-expr
+	 	 : for-expr
+	 	 : while-expr
+	 	 : func-def
+	 	 
+list-expr: LBRACKET (expr (COMMA expr)*)? RBRACKET
+
+
+if-expr  : KEYWORD:IF expr KEYWORD:DO expr
+		   (KEYWORD:ORIF expr KEYWORD:THEN expr)*
+		   (KEYWORD:ELSE expr)?
+
+for-expr : KEYWORD:FOR IDENTIFIER EQUALS expr KEYWORD:TO expr
+			(KEYWORD:STEP expre)? KEYWORD:THEN expr
+
+while-expr : KEYBOARD:WHILE expr KEYWORD:THEN expr
+
+func-def		: KEYWORD:FUN IDENTIFIER?
+							LPAREN (IDENTIFIER (COMMA IDENTIFIER)*)? RPAREN
+							ARROW expr
+
+
+        
+        
+        
+
+
+
+    
+ 
